@@ -3,6 +3,8 @@
 //
 
 #include "../include/game.h"
+
+#include <math.h>
 #include <SDL3/SDL.h>
 
 Game_Camera *Game_Camera_Create() {
@@ -240,4 +242,23 @@ void Game_PrintObjects(const Game_AppState *state) {
         SDL_Log("%lu: %s\n", i, str);
         SDL_free(str);
     }
+}
+
+void Game_RenderPolygon(SDL_Renderer *renderer, const Vector2D *pos, const double radius, const int n_points) {
+    SDL_FPoint *points = SDL_malloc((n_points + 1) * sizeof(SDL_FPoint));
+    const double step_angle = 2 * M_PI / n_points;
+    double angle = 0;
+    for (size_t i = 0; i <= n_points; i++) {
+        if (i == n_points) angle = 0;
+        points[i].x = (float)(pos->x + cos(angle) * radius);
+        points[i].y = (float)(pos->y + sin(angle) * radius);
+        angle += step_angle;
+    }
+    SDL_RenderLines(renderer, points, n_points + 1);
+    SDL_free(points);
+}
+
+void Game_RenderCircle(SDL_Renderer *renderer, const Vector2D *pos, const double radius) {
+    constexpr int n_points = 64;
+    Game_RenderPolygon(renderer, pos, radius, n_points);
 }

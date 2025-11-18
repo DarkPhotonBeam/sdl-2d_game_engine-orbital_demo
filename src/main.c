@@ -113,6 +113,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     if (event->type == SDL_EVENT_KEY_DOWN) {
         switch (event->key.key) {
             case SDLK_PERIOD:
+                if (warp_factor >= (1U<<31)) break;
                 game->delta_time_scale *= 2;
                 warp_factor <<= 1;
                 refresh_warp_buf();

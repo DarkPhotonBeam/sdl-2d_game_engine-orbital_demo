@@ -89,4 +89,7 @@ void Game_Render(const Game_AppState *state, int clear_screen);
 
 SDL_Texture *Game_TextureFromPNG(SDL_Renderer *renderer, const char *path);
 
+void Game_RenderPolygon(SDL_Renderer *renderer, const Vector2D *pos, const double radius, const int n_points);
+void Game_RenderCircle(SDL_Renderer *renderer, const Vector2D *pos, const double radius);
+
 #endif //GAME_H
