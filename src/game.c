@@ -2,7 +2,7 @@
 // Created by dan on 11/17/25.
 //
 
-#include "game.h"
+#include "../include/game.h"
 #include <SDL3/SDL.h>
 
 Game_Camera *Game_Camera_Create() {
@@ -98,7 +98,7 @@ Game_AppState *Game_AppState_Create() {
     return state;
 }
 
-void Game_AppState_AddObject(Game_AppState *state, Game_Object *obj) {
+void Game_AddObject(Game_AppState *state, Game_Object *obj) {
     if (state->n_objects >= state->objects_cap) {
         state->objects_cap <<= 1; // double objects capacity
         state->objects = SDL_realloc(state->objects, state->objects_cap * sizeof(Game_Object *));
@@ -109,36 +109,46 @@ void Game_AppState_AddObject(Game_AppState *state, Game_Object *obj) {
     state->n_objects++;
 }
 
-void Game_AppState_RemoveObject(Game_AppState *state, Game_Object *obj) {
+void Game_RemoveObject(Game_AppState *state, Game_Object *obj) {
     state->objects[obj->index] = nullptr;
     Game_Object_Destroy(obj);
 }
 
 void Game_AppState_Destroy(Game_AppState *state) {
     Game_Camera_Destroy(state->cam);
+    SDL_DestroyWindow(state->window);
+    SDL_DestroyRenderer(state->renderer);
     SDL_free(state->key_state);
     SDL_free(state);
 }
 
-SDL_AppResult Game_Iterate(Game_AppState *state) {
+void Game_Compute(Game_AppState *state) {
     const Uint64 curr_ticks = SDL_GetTicksNS();
     const Uint64 delta = curr_ticks - state->prev_ticks;
     state->prev_ticks = curr_ticks;
     const double delta_time = ((double) delta) * state->delta_time_scale;
-
-    SDL_SetRenderDrawColor(state->renderer, 0, 0, 0, 255);
-    SDL_RenderClear(state->renderer);
 
     // Abrupt Camera Movement
     const Vector2D scaled_cam_vec = Vector2D_Scaled(&state->cam->vel, 0.1 / state->cam->zoom);
     Vector2D_AddVec(&state->cam->pos, &scaled_cam_vec);
 
     Game_SimulationStep(state, delta_time);
+}
+
+void Game_Render(const Game_AppState *state, const int clear_screen) {
+    if (clear_screen) {
+        SDL_SetRenderDrawColor(state->renderer, 0, 0, 0, 255);
+        SDL_RenderClear(state->renderer);
+    }
     Game_RenderObjects(state);
+}
 
-    SDL_RenderPresent(state->renderer);
-
-    return SDL_APP_CONTINUE;
+SDL_Texture *Game_TextureFromPNG(SDL_Renderer *renderer, const char *path) {
+    SDL_Surface *surf = SDL_LoadPNG(path);
+    SDL_Log("Guadalajara: %s", path);
+    SDL_Texture *text = SDL_CreateTextureFromSurface(renderer, surf);
+    SDL_DestroySurface(surf);
+    return text;
 }
 
 void RenderObject(const Game_AppState *state, const Game_Object *obj) {

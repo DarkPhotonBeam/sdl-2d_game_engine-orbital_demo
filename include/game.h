@@ -13,7 +13,7 @@
 
 #define GAME_INITIAL_OBJECTS_CAP 64
 #define GAME_SIMULATOR_GRAVITY_CONST (6.674e-11)
-#define GAME_SIMULATOR_MIN_DIST (1e-1)
+#define GAME_SIMULATOR_MIN_DIST (10)
 
 typedef struct {
     Vector2D vel;
@@ -76,14 +76,17 @@ typedef struct {
 
 Game_AppState *Game_AppState_Create();
 
-void Game_AppState_AddObject(Game_AppState *state, Game_Object *obj);
-void Game_AppState_RemoveObject(Game_AppState *state, Game_Object *obj);
+void Game_AddObject(Game_AppState *state, Game_Object *obj);
+void Game_RemoveObject(Game_AppState *state, Game_Object *obj);
 
 void Game_AppState_Destroy(Game_AppState *state);
 
 void Game_SimulationStep(Game_AppState *state, const double delta_time);
 void Game_PrintObjects(const Game_AppState *state);
 void Game_RenderObjects(const Game_AppState *state);
-SDL_AppResult Game_Iterate(Game_AppState *state);
+void Game_Compute(Game_AppState *state);
+void Game_Render(const Game_AppState *state, int clear_screen);
+
+SDL_Texture *Game_TextureFromPNG(SDL_Renderer *renderer, const char *path);
 
 #endif //GAME_H

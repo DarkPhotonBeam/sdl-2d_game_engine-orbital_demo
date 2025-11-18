@@ -2,7 +2,7 @@
 // Created by dan on 11/17/25.
 //
 
-#include "vector2d.h"
+#include "../include/vector2d.h"
 
 #include <math.h>
 

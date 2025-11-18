@@ -2,7 +2,7 @@
 // Created by dan on 11/17/25.
 //
 
-#include "rigidbody2d.h"
+#include "../include/rigidbody2d.h"
 #include <SDL3/SDL_stdinc.h>
 #include <stdio.h>
 
