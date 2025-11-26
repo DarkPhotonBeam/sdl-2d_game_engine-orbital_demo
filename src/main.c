@@ -1,11 +1,10 @@
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../include/game.h"
-#include "../include/string.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+#include <2DEngine/game.h>
+#include <2DEngine/string.h>
 
 #define WINDOW_FLAGS (0) // SDL_WINDOW_FULLSCREEN
 
@@ -42,7 +41,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     const char* env_path_fallback = "/usr/local/share/sdl_2dengine_resources";
     const char* env_path = getenv("SDL_2DENGINE_RESOURCE_PATH");
     String *resource_path = String_FromCstr(env_path == nullptr ? env_path_fallback : env_path);
-    SDL_Log("Resource Path: %s", resource_path);
+    SDL_Log("Resource Path: %s", resource_path->str);
     String *earth_path = String_ConcatCstr(resource_path, "/earth.png");
     String *moon_path = String_ConcatCstr(resource_path, "/moon.png");
 
