@@ -48,8 +48,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     SDL_Log("Earth path: %s", earth_path->str);
     SDL_Log("Moon path: %s", moon_path->str);
 
-    SDL_Texture *moon_texture = Game_TextureFromPNG(app_state->renderer, moon_path->str);
-    SDL_Texture *earth_texture = Game_TextureFromPNG(app_state->renderer, earth_path->str);
+    SDL_Texture *moon_texture = Game_CreateTextureFromPNG(app_state->renderer, moon_path->str);
+    SDL_Texture *earth_texture = Game_CreateTextureFromPNG(app_state->renderer, earth_path->str);
 
     String_Destroy(resource_path);
     String_Destroy(earth_path);
